@@ -1,0 +1,36 @@
+networks:
+    b-price-net:
+        driver: bridge
+
+services:
+    php:
+        container_name: b-price-php
+        image: webdevops/php-nginx:8.4
+        working_dir: ${CONTAINER_APP_DIR}
+        expose:
+            - 9000
+        ports:
+            - "80:80"
+        networks:
+            - b-price-net
+        environment:
+            - WEB_DOCUMENT_ROOT=${CONTAINER_APP_DIR}
+            - WEB_DOCUMENT_INDEX=public/index.php
+        volumes:
+            - ..:${CONTAINER_APP_DIR}
+    db:
+        container_name: b-price-db
+        image: mysql:8.0.33
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        ports:
+            - "3306:3306"
+        networks:
+            - b-price-net
+        volumes:
+            - ./data/db/mysql:/var/lib/mysql
+volumes:
+    cr_db:
