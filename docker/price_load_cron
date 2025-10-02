@@ -1,0 +1,1 @@
+*/1 * * * * /usr/local/bin/php /var/www/b-price/bin/console app:prices:load >> /var/log/price_load_cron.log 2>&1

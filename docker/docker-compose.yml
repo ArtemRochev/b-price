@@ -5,6 +5,8 @@ networks:
 services:
     php:
         container_name: b-price-php
+        build:
+            dockerfile: Dockerfile
         image: webdevops/php-nginx:8.4
         working_dir: ${CONTAINER_APP_DIR}
         expose:
