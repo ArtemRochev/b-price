@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\RateHistory;
+use App\DTO\ExchangePair;
 use App\Repository\RateHistoryRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +14,30 @@ use Symfony\Component\Routing\Attribute\Route;
 final class RateController extends AbstractController
 {
     #[Route('/last-24h')]
-    public function index(Request $request, RateHistoryRepository $repository): JsonResponse
+    public function last24h(Request $request, RateHistoryRepository $repository): JsonResponse
     {
-        $pair = $request->get('pair');
+        $pair = new ExchangePair($request->get('pair'));
 
-        [$from, $to] = explode('/', $pair);
+        $ratesHistory = $repository->findByPairLast24h($pair->getFrom(), $pair->getTo());
 
-        $ratesHistory = $repository->findByPair($from, $to);
+        $res = [];
+
+        foreach ($ratesHistory as $history) {
+            $res[] = [
+                'rate' => $history->getRate(),
+                'date' => $history->getDate()->format(DATE_ATOM),
+            ];
+        }
+
+        return $this->json($res);
+    }
+
+    #[Route('/day')]
+    public function day(Request $request, RateHistoryRepository $repository): JsonResponse
+    {
+        $pair = new ExchangePair($request->get('pair'));
+
+        $ratesHistory = $repository->findByPairDay($pair->getFrom(), $pair->getTo(), new DateTime($request->get('date')));
 
         $res = [];
 

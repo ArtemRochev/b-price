@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\RateHistory;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class RateHistoryRepository extends ServiceEntityRepository
@@ -15,30 +17,38 @@ class RateHistoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return RateHistory[] Returns an array of RateHistory objects
+     * @return RateHistory[]
      */
-    public function findByPair(string $from, string $to): array
+    public function findByPairLast24h(string $currencyFrom, string $currencyTo): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.currency_from = :from')
-            ->andWhere('r.currency_to = :to')
+        return $this->findByPairQb($currencyFrom, $currencyTo)
             ->andWhere('r.date > :date')
-            ->setParameter('from', $from)
-            ->setParameter('to', $to)
-            ->setParameter('date', (new DateTime())->format('Y-m-d'))
-            ->orderBy('r.date', 'DESC')
-            ->setMaxResults(10)
+            ->setParameter('date', (new DateTime())->modify('-1 day')->format(DateTimeInterface::ATOM))
             ->getQuery()
             ->getResult();
     }
 
-    //    public function findOneBySomeField($value): ?RateHistory
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    private function findByPairQb(string $currencyFrom, string $currencyTo): QueryBuilder
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.currency_from = :from')
+            ->andWhere('r.currency_to = :to')
+            ->setParameter('from', $currencyFrom)
+            ->setParameter('to', $currencyTo)
+            ->orderBy('r.date', 'DESC');
+    }
+
+    /**
+     * @return RateHistory[]
+     */
+    public function findByPairDay(string $currencyFrom, string $currencyTo, DateTime $dateTime): array
+    {
+        return $this->findByPairQb($currencyFrom, $currencyTo)
+            ->andWhere('r.date > :date_from')
+            ->andWhere('r.date < :date_to')
+            ->setParameter('date_from', $dateTime->format(DateTimeInterface::ATOM))
+            ->setParameter('date_to', $dateTime->modify('+1 day')->format(DateTimeInterface::ATOM))
+            ->getQuery()
+            ->getResult();
+    }
 }
