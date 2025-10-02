@@ -19,5 +19,5 @@ binance.api.hosts:
     - 'https://api-gcp.binance.com'
 ```
 Requests example:<br>
-``http://localhost/api/rates/last-24h?pair=EUR/BTC``
+``http://localhost/api/rates/last-24h?pair=EUR/BTC``<br>
 ``http://localhost/api/rates/day?pair=EUR/BTC&date=2025-09-30``
