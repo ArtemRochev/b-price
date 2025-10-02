@@ -5,6 +5,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
+        "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/dbal": "^3",
@@ -23,8 +24,8 @@
         "symfony/property-info": "7.3.*",
         "symfony/runtime": "7.3.*",
         "symfony/serializer": "7.3.*",
-        "symfony/yaml": "7.3.*",
-        "ext-bcmath": "*"
+        "symfony/validator": "^7.3",
+        "symfony/yaml": "7.3.*"
     },
     "config": {
         "allow-plugins": {

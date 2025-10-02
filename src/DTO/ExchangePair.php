@@ -4,6 +4,8 @@ namespace App\DTO;
 
 class ExchangePair
 {
+    const CURRENCY_CODE_LEN = 3;
+
     private string $from;
 
     private string $to;

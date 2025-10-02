@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\DTO\ExchangePair;
 use App\Service\TickerPriceLoader;
 use App\Service\RateHistorySaver;
 use DateTime;
@@ -14,8 +15,6 @@ use Throwable;
 #[AsCommand(name: 'app:prices:load')]
 class PricesLoadCommand
 {
-    const CURRENCY_CODE_LEN = 3;
-
     public function __construct(
         private RateHistorySaver    $rateHistoryManager,
         private SerializerInterface $serializer,
@@ -39,8 +38,8 @@ class PricesLoadCommand
         $prices       = $this->serializer->deserialize($pricesData, 'App\DTO\Price[]', 'json');
 
         foreach ($prices as $price) {
-            $currencyFrom = substr($price->getSymbol(), 0, self::CURRENCY_CODE_LEN);
-            $currencyTo   = substr($price->getSymbol(), self::CURRENCY_CODE_LEN, self::CURRENCY_CODE_LEN * 2);
+            $currencyFrom = substr($price->getSymbol(), 0, ExchangePair::CURRENCY_CODE_LEN);
+            $currencyTo   = substr($price->getSymbol(), ExchangePair::CURRENCY_CODE_LEN, ExchangePair::CURRENCY_CODE_LEN * 2);
 
             $this->rateHistoryManager->addRate(
                 $currencyTo,
