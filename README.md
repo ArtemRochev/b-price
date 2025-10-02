@@ -1,5 +1,5 @@
 Run:<br>
-``cp env-example .env``<br>
+``cp docker/env-example docker/.env``<br>
 ``cd docker && docker-compose up -d``<br>
 ``docker exec b-price-php bash -c "composer install"``<br>
 ``docker exec b-price-php bash -c "bin/console doctrine:migrations:migrate"``<br>
