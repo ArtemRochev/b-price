@@ -1,6 +1,7 @@
 Run:<br>
 ``cp env-example .env``<br>
 ``cd docker && docker-compose up -d``<br>
+``docker exec b-price-php bash -c "composer install"``<br>
 ``docker exec b-price-php bash -c "cron"``
 
 Symbols to load can be configured in ``config/services.yaml``
