@@ -23,7 +23,7 @@ binance.api.hosts:
     - 'https://api.binance.com'
     - 'https://api-gcp.binance.com'
 ```
-Load interval can be configured in ``config/services.yaml``<br>
+Load interval can be configured in ``docker/price_load_cron``<br>
 
 Requests example:<br>
 ``http://localhost/api/rates/last-24h?pair=EUR/BTC``<br>
